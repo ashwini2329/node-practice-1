@@ -6,6 +6,7 @@ const {
   getAllStudents,
   handleDeleteUserByRollNo,
   handleUpdateStudentById,
+  replaceStudentById,
 } = require("../controllers/student");
 
 router.get("/getAllStudents", getAllStudents);
@@ -14,6 +15,9 @@ router.post("/addStudent", handleAddStudents);
 
 router.delete("/deleteStudent/:id", handleDeleteUserByRollNo);
 
-router.patch("/updateStudent/:id", handleUpdateStudentById);
+router
+  .route("/updateStudent/:id")
+  .patch(handleUpdateStudentById)
+  .put(replaceStudentById);
 
 module.exports = router;

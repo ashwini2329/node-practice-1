@@ -1,5 +1,6 @@
 const db = require("../dbConfig");
 
+// GET Request - Get all data from the student table
 const getAllStudents = async (req, res) => {
   try {
     const data = await db.query(`SELECT * FROM student`);
@@ -24,6 +25,7 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+// POST Request - Adding student into student table
 const handleAddStudents = async (req, res) => {
   try {
     const { roll_no, name, classCurrent, fees, age, address } = req.body;
@@ -60,6 +62,7 @@ const handleAddStudents = async (req, res) => {
   }
 };
 
+// DELETE Request - Deleting student by Id from student table
 const handleDeleteUserByRollNo = async (req, res) => {
   try {
     console.log(req.params);
@@ -95,6 +98,7 @@ const handleDeleteUserByRollNo = async (req, res) => {
   }
 };
 
+// PATCH Request - Updating student By Id
 const handleUpdateStudentById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -129,9 +133,45 @@ const handleUpdateStudentById = async (req, res) => {
   }
 };
 
+// PUT Request - Updating student By Id
+const replaceStudentById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, classCurrent, fees, age, address } = req.body;
+    if (!name || !classCurrent || !fees || !age || !address) {
+      res.status(400).send({
+        success: false,
+        message: "All fields are required to update the data",
+      });
+    }
+    const data = await db.query(
+      `UPDATE student SET name = ?, classCurrent = ?, fees = ?, age = ?, address = ? WHERE roll_no = ?`,
+      [name, classCurrent, fees, age, address, id]
+    );
+    if (!data) {
+      res.status(404).send({
+        message: false,
+        message: `Error replacing the user with ${id}`,
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "User replaced successfully",
+    });
+  } catch (error) {
+    console.log(`Error replacing student - ${error}`);
+    res.status(500).send({
+      success: false,
+      message: "Error replacing student",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   getAllStudents,
   handleAddStudents,
   handleDeleteUserByRollNo,
   handleUpdateStudentById,
+  replaceStudentById,
 };
