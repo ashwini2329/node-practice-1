@@ -60,4 +60,43 @@ const handleAddStudents = async (req, res) => {
   }
 };
 
-module.exports = { getAllStudents, handleAddStudents };
+const handleDeleteUserByRollNo = async (req, res) => {
+  try {
+    console.log(req.params);
+    const id = req.params.id;
+    if (!id) {
+      console.log("id is required to delete a user");
+      res.status(400).send({
+        success: false,
+        message: "Please provide id to delete the user",
+      });
+    }
+    const [data] = await db.query(`DELETE FROM student WHERE roll_no = ?`, [
+      id,
+    ]);
+    if (data.affectedRows === 0) {
+      console.log("User not found or already deleted");
+      return res.status(404).send({
+        success: false,
+        message: "User not found or already deleted",
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: false,
+      message: "Error deleting user",
+      error: error,
+    });
+  }
+};
+
+module.exports = {
+  getAllStudents,
+  handleAddStudents,
+  handleDeleteUserByRollNo,
+};
