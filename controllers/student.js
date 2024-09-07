@@ -95,8 +95,43 @@ const handleDeleteUserByRollNo = async (req, res) => {
   }
 };
 
+const handleUpdateStudentById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, fees, age, address } = req.body;
+    if (!id) {
+      res.status(400).send({
+        success: false,
+        message: "Please provide id to update the student",
+      });
+    }
+    const data = await db.query(
+      `UPDATE student SET name = ?,fees = ?,age = ?, address = ? WHERE roll_no = ?`,
+      [name, fees, age, address, id]
+    );
+    if (!data) {
+      res.status(404).send({
+        success: false,
+        message: `Errro updating the user with ${id}`,
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    console.log(`Error Updating student - ${error}`);
+    res.status(500).send({
+      success: false,
+      message: "Error updating student",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   getAllStudents,
   handleAddStudents,
   handleDeleteUserByRollNo,
+  handleUpdateStudentById,
 };
