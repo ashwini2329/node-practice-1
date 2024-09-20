@@ -9,9 +9,12 @@ const db = require("./dbConfig");
 const PORT = 8080;
 const studentRoute = require("./routes/student");
 const employeesRoute = require("./routes/employee");
+const userRoute = require("../node-practice-1/routes/user");
 
 //middlewares
 app.use(express.json());
+
+app.use("/user", userRoute);
 
 // student routes handler
 app.use("/students", studentRoute);
