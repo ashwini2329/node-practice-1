@@ -14,13 +14,13 @@ const userRoute = require("../node-practice-1/routes/user");
 //middlewares
 app.use(express.json());
 
-app.use("/user", userRoute);
+// app.use("/user", userRoute);
 
 // student routes handler
 app.use("/students", studentRoute);
 
 // employees routes handler
-app.use("/employees", employeesRoute);
+// app.use("/employees", employeesRoute);
 
 app.get("/", (req, res) => {
   res.status(200).send("<h1>Hello from Node.Js</h1>");
