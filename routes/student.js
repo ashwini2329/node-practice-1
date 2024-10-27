@@ -16,7 +16,7 @@ router.get("/getStudentById/:roll_no", getStudentByRollNo);
 
 router.post("/addStudent", handleAddStudents);
 
-router.delete("/deleteStudent/:id", handleDeleteUserByRollNo);
+router.delete("/deleteStudent/:roll_no", handleDeleteUserByRollNo);
 
 router
   .route("/updateStudent/:id")

@@ -73,39 +73,30 @@ const handleAddStudents = async (req, res) => {
 };
 
 // DELETE Request - Deleting student by Id from student table
-const handleDeleteUserByRollNo = async (req, res) => {
-  try {
-    console.log(req.params);
-    const id = req.params.id;
-    if (!id) {
-      console.log("id is required to delete a user");
-      res.status(400).send({
+const handleDeleteUserByRollNo = (req, res) => {
+  const roll_no = req.params.roll_no;
+
+  Student.destroy({ where: { roll_no: roll_no } })
+    .then((deleted) => {
+      if (deleted) {
+        res.status(200).json({
+          success: true,
+          message: "Student deleted successfully",
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Student not found",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
         success: false,
-        message: "Please provide id to delete the user",
+        message: "Error deleting student",
+        error: error.message,
       });
-    }
-    const [data] = await db.query(`DELETE FROM student WHERE roll_no = ?`, [
-      id,
-    ]);
-    if (data.affectedRows === 0) {
-      console.log("User not found or already deleted");
-      return res.status(404).send({
-        success: false,
-        message: "User not found or already deleted",
-      });
-    }
-    res.status(200).send({
-      success: true,
-      message: "User deleted successfully",
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: false,
-      message: "Error deleting user",
-      error: error,
-    });
-  }
 };
 
 // PATCH Request - Updating student By Id
