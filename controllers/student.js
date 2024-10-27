@@ -19,6 +19,31 @@ const getAllStudents = async (req, res) => {
     });
 };
 
+const getStudentByRollNo = async (req, res) => {
+  const roll_no = req.params.roll_no;
+  Student.findByPk(roll_no)
+    .then((student) => {
+      if (student) {
+        res.status(201).json({
+          success: true,
+          data: student,
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Student not found",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: "Error fetching student",
+        error: error.message,
+      });
+    });
+};
+
 // POST Request - Adding student into student table
 const handleAddStudents = async (req, res) => {
   const { roll_no, name, classCurrent, fees, age, address } = req.body;
@@ -154,6 +179,7 @@ const replaceStudentById = async (req, res) => {
 
 module.exports = {
   getAllStudents,
+  getStudentByRollNo,
   handleAddStudents,
   handleDeleteUserByRollNo,
   handleUpdateStudentById,
