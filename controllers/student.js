@@ -131,35 +131,30 @@ const handleUpdateStudentById = async (req, res) => {
 
 // PUT Request - Updating student By Id
 const replaceStudentById = async (req, res) => {
+  const roll_no = req.params.roll_no;
+  const { name, classCurrent, fees, age, address } = req.body;
   try {
-    const id = req.params.id;
-    const { name, classCurrent, fees, age, address } = req.body;
-    if (!name || !classCurrent || !fees || !age || !address) {
-      res.status(400).send({
-        success: false,
-        message: "All fields are required to update the data",
-      });
-    }
-    const data = await db.query(
-      `UPDATE student SET name = ?, classCurrent = ?, fees = ?, age = ?, address = ? WHERE roll_no = ?`,
-      [name, classCurrent, fees, age, address, id]
-    );
-    if (!data) {
-      res.status(404).send({
-        message: false,
-        message: `Error replacing the user with ${id}`,
-      });
-    }
-    res.status(200).send({
-      success: true,
-      message: "User replaced successfully",
+    Student.update(
+      { name, classCurrent, fees, age, address },
+      { where: { roll_no: roll_no } }
+    ).then((updated) => {
+      if (updated) {
+        res.status(200).json({
+          success: true,
+          message: "Student updated successfully",
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Student not found",
+        });
+      }
     });
   } catch (error) {
-    console.log(`Error replacing student - ${error}`);
-    res.status(500).send({
+    res.status(500).json({
       success: false,
-      message: "Error replacing student",
-      error: error,
+      message: "Error updating student",
+      error: error.message,
     });
   }
 };
