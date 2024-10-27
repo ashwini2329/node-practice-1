@@ -4,7 +4,7 @@ const cors = require("cors");
 
 app.use(cors());
 
-const db = require("./dbConfig");
+const sequelize = require("./dbConfig");
 
 const PORT = 8080;
 const studentRoute = require("./routes/student");
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.status(200).send("<h1>Hello from Node.Js</h1>");
 });
 
-db.query("Select 1")
+sequelize.query("Select 1")
   .then(() => {
     console.log("connected to database");
     app.listen(PORT, () => {
