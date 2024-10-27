@@ -19,7 +19,7 @@ router.post("/addStudent", handleAddStudents);
 router.delete("/deleteStudent/:roll_no", handleDeleteUserByRollNo);
 
 router
-  .route("/updateStudent/:id")
+  .route("/updateStudent/:roll_no")
   .patch(handleUpdateStudentById)
   .put(replaceStudentById);
 

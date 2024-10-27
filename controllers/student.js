@@ -101,35 +101,30 @@ const handleDeleteUserByRollNo = (req, res) => {
 
 // PATCH Request - Updating student By Id
 const handleUpdateStudentById = async (req, res) => {
+  const roll_no = req.params.roll_no;
+  const { name, fees, address } = req.body;
   try {
-    const id = req.params.id;
-    const { name, fees, age, address } = req.body;
-    if (!id) {
-      res.status(400).send({
-        success: false,
-        message: "Please provide id to update the student",
-      });
-    }
-    const data = await db.query(
-      `UPDATE student SET name = ?,fees = ?,age = ?, address = ? WHERE roll_no = ?`,
-      [name, fees, age, address, id]
-    );
-    if (!data) {
-      res.status(404).send({
-        success: false,
-        message: `Errro updating the user with ${id}`,
-      });
-    }
-    res.status(200).send({
-      success: true,
-      message: "User updated successfully",
+    Student.update(
+      { name, fees, address },
+      { where: { roll_no: roll_no } }
+    ).then((updated) => {
+      if (updated) {
+        res.status(200).json({
+          success: true,
+          message: "Student updated successfully",
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Student not found",
+        });
+      }
     });
   } catch (error) {
-    console.log(`Error Updating student - ${error}`);
-    res.status(500).send({
+    res.status(500).json({
       success: false,
       message: "Error updating student",
-      error: error,
+      error: error.message,
     });
   }
 };
