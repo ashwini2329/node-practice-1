@@ -3,34 +3,39 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors());
-
 const sequelize = require("./dbConfig");
+
+// Import your model
+const Student = require("./models/student");
 
 const PORT = 8080;
 const studentRoute = require("./routes/student");
 const employeesRoute = require("./routes/employee");
 const userRoute = require("../node-practice-1/routes/user");
 
-//middlewares
+// Middlewares
 app.use(express.json());
 
+// Routes
 // app.use("/user", userRoute);
-
-// student routes handler
 app.use("/students", studentRoute);
-
-// employees routes handler
 // app.use("/employees", employeesRoute);
 
 app.get("/", (req, res) => {
   res.status(200).send("<h1>Hello from Node.Js</h1>");
 });
 
-sequelize.query("Select 1")
+// Sync the database schema and start the server
+sequelize
+  .sync() // You can also use .sync({ alter: true }) to update tables if the model structure changes
   .then(() => {
-    console.log("connected to database");
+    console.log("Database synced successfully.");
+    return sequelize.query("SELECT 1"); // Optional check to verify the connection
+  })
+  .then(() => {
+    console.log("Connected to database");
     app.listen(PORT, () => {
-      console.log(`server connected at port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
