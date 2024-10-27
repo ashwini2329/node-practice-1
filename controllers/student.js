@@ -19,6 +19,7 @@ const getAllStudents = async (req, res) => {
     });
 };
 
+// GET Studeny by Roll No
 const getStudentByRollNo = async (req, res) => {
   const roll_no = req.params.roll_no;
   Student.findByPk(roll_no)
