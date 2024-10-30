@@ -1,41 +1,32 @@
-const bcrypt = require("bcryptjs/dist/bcrypt");
+const bcrypt = require("bcryptjs");
 const db = require("../dbConfig");
+const UserSignUp = require("../models/user");
 
 const handleUserSignup = async (req, res) => {
-  try {
-    const { userName, email, passwd } = req.body;
-    if (!userName || !email || !password) {
-      res.status(400).send({
-        success: false,
-        message: "All fields are required to signup user",
+  const { userId, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 12);
+  console.log(
+    `password - ${password} and hashed passwd is - ${hashedPassword}`
+  );
+  UserSignUp.create({
+    userId,
+    email,
+    password: hashedPassword,
+  })
+    .then((signup) => {
+      return res.status(201).json({
+        success: true,
+        message: "User created successfully",
+        data: signup,
       });
-    }
-    const hashedPassword = await bcrypt.hash(passwd, 12);
-    console.log(
-      `password - ${passwd} and hashed passwd is - ${hashedPassword}`
-    );
-    const data = await db.query(
-      `INSERT INTO user (userName, email, passwd) VALUES(?, ?, ?)`,
-      [userName, email, hashedPassword]
-    );
-    if (!data) {
-      res.status(404).send({
+    })
+    .catch((error) => {
+      return res.status(500).json({
         success: false,
-        message: "User already exists",
+        message: "Error creating user",
+        error: error.message,
       });
-    }
-    res.status(201).send({
-      success: true,
-      message: "User registered successfully",
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Error signing up user",
-      error: error,
-    });
-  }
 };
 
 module.exports = { handleUserSignup };

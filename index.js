@@ -7,6 +7,7 @@ const sequelize = require("./dbConfig");
 
 // Import your model
 const Student = require("./models/student");
+const UserSignUp = require("./models/user");
 
 const PORT = 8080;
 const studentRoute = require("./routes/student");
@@ -17,7 +18,7 @@ const userRoute = require("../node-practice-1/routes/user");
 app.use(express.json());
 
 // Routes
-// app.use("/user", userRoute);
+app.use("/users", userRoute);
 app.use("/students", studentRoute);
 // app.use("/employees", employeesRoute);
 
