@@ -5,7 +5,7 @@ const Student = require("../models/student");
 const getAllStudents = async (req, res) => {
   Student.findAll()
     .then((students) => {
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: students,
       });
