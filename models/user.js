@@ -19,4 +19,17 @@ const UserSignUp = sequelize.define("userSignUp", {
   },
 });
 
-module.exports = UserSignUp;
+const UserSignIn = sequelize.define("userSignIn", {
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
+    primaryKey: true,
+    allowNull: false,
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
+
+module.exports = { UserSignUp, UserSignIn };
