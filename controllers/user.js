@@ -48,6 +48,7 @@ const handleUserSignIn = async (req, res) => {
         message: "User logged in successfully",
         token: token,
         data: user,
+        expiresIn: 3600,
       });
     } else {
       return res.status(400).json({
