@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../middlewares/verifyJwtToken");
 
 const {
   handleAddStudents,
@@ -10,13 +11,13 @@ const {
   replaceStudentById,
 } = require("../controllers/student");
 
-router.get("/getAllStudents", getAllStudents);
+router.get("/getAllStudents", verifyToken, getAllStudents);
 
-router.get("/getStudentById/:roll_no", getStudentByRollNo);
+router.get("/getStudentById/:roll_no", verifyToken, getStudentByRollNo);
 
-router.post("/addStudent", handleAddStudents);
+router.post("/addStudent", verifyToken, handleAddStudents);
 
-router.delete("/deleteStudent/:roll_no", handleDeleteUserByRollNo);
+router.delete("/deleteStudent/:roll_no", verifyToken, handleDeleteUserByRollNo);
 
 router
   .route("/updateStudent/:roll_no")
