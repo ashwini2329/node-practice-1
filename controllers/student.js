@@ -74,19 +74,26 @@ const handleAddStudents = async (req, res) => {
 
 // DELETE Request - Deleting student by Id from student table
 const handleDeleteUserByRollNo = (req, res) => {
-  const roll_no = req.params.roll_no;
-
+  const roll_no = req.body.roll_no;
+  if (!roll_no) {
+    return res.status(422).json({
+      success: false,
+      message: "Roll number is required",
+    });
+  }
   Student.destroy({ where: { roll_no: roll_no } })
     .then((deleted) => {
       if (deleted) {
         res.status(200).json({
           success: true,
           message: "Student deleted successfully",
+          data: deleted,
         });
       } else {
         res.status(404).json({
           success: false,
           message: "Student not found",
+          data: deleted,
         });
       }
     })
