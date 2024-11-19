@@ -48,6 +48,12 @@ const getStudentByRollNo = async (req, res) => {
 // POST Request - Adding student into student table
 const handleAddStudents = async (req, res) => {
   const { roll_no, name, classCurrent, fees, age, address } = req.body;
+  if (!roll_no || !name || !classCurrent || !fees || !age || !address) {
+    return res.status(422).json({
+      success: false,
+      error: "All fields are required to create a student",
+    });
+  }
   Student.create({
     roll_no,
     name,
