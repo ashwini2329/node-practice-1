@@ -22,10 +22,10 @@ app.get("/", (req, res) => {
 });
 
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(() => {
     console.log("Database synced successfully.");
-    return sequelize.query("SELECT 1"); // Optional check to verify the connection
+    return sequelize.query("SELECT 1");
   })
   .then(() => {
     console.log("Connected to database");
