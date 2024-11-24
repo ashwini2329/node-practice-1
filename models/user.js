@@ -2,6 +2,12 @@ const Sequelize = require("sequelize");
 const sequelize = require("../dbConfig");
 
 const UserSignUp = sequelize.define("userSignUp", {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
   userId: {
     type: Sequelize.STRING,
     unique: true,
@@ -10,7 +16,6 @@ const UserSignUp = sequelize.define("userSignUp", {
   email: {
     type: Sequelize.STRING,
     unique: true,
-    primaryKey: true,
     allowNull: false,
   },
   password: {
@@ -18,18 +23,4 @@ const UserSignUp = sequelize.define("userSignUp", {
     allowNull: false,
   },
 });
-
-const UserSignIn = sequelize.define("userSignIn", {
-  email: {
-    type: Sequelize.STRING,
-    unique: true,
-    primaryKey: true,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
-
-module.exports = { UserSignUp, UserSignIn };
+module.exports = UserSignUp;

@@ -29,5 +29,9 @@ const Student = sequelize.define("student", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  createdBy: {
+    type: Sequelize.INTEGER, // or STRING, depending on the data type of userId
+    allowNull: false,
+  },
 });
 module.exports = Student;

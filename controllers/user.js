@@ -2,20 +2,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const db = require("../dbConfig");
-const { UserSignUp, UserSignIn } = require("../models/user");
+const UserSignUp = require("../models/user");
 
 const handleUserSignup = async (req, res) => {
   const { userId, email, password } = req.body;
-  const user = await UserSignUp.findOne({
-    where: { email },
-  });
-  if (user) {
-    return res.status(409).json({
-      success: false,
-      error: "Conflict",
-      message: "User ID already exists.",
-    });
-  }
   const hashedPassword = await bcrypt.hash(password, 12);
   UserSignUp.create({
     userId,
@@ -30,6 +20,12 @@ const handleUserSignup = async (req, res) => {
       });
     })
     .catch((error) => {
+      if (error.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).json({
+          success: false,
+          message: "Email already exists",
+        });
+      }
       return res.status(500).json({
         success: false,
         message: "Error creating user",
@@ -41,7 +37,7 @@ const handleUserSignup = async (req, res) => {
 const handleUserSignIn = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await UserSignUp.findOne({ email });
+    const user = await UserSignUp.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -50,7 +46,8 @@ const handleUserSignIn = async (req, res) => {
     }
     const doMatch = await bcrypt.compare(password, user.password);
     if (doMatch) {
-      const token = jwt.sign({ userId: user.id }, jwtSecret, {
+      const payload = { userId: user.id };
+      const token = jwt.sign(payload, jwtSecret, {
         expiresIn: "1h",
       });
       return res.status(200).json({

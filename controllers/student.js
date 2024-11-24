@@ -3,7 +3,11 @@ const Student = require("../models/student");
 
 // GET Request - Get all data from the student table
 const getAllStudents = async (req, res) => {
-  Student.findAll()
+  Student.findAll({
+    where: {
+      createdBy: req.user,
+    },
+  })
     .then((students) => {
       return res.status(201).json({
         success: true,
@@ -61,6 +65,7 @@ const handleAddStudents = async (req, res) => {
     fees,
     age,
     address,
+    createdBy: req.user,
   })
     .then((student) => {
       res.status(201).json({
