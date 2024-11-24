@@ -6,6 +6,16 @@ const { UserSignUp, UserSignIn } = require("../models/user");
 
 const handleUserSignup = async (req, res) => {
   const { userId, email, password } = req.body;
+  const user = await UserSignUp.findOne({
+    where: { email },
+  });
+  if (user) {
+    return res.status(409).json({
+      success: false,
+      error: "Conflict",
+      message: "User ID already exists.",
+    });
+  }
   const hashedPassword = await bcrypt.hash(password, 12);
   UserSignUp.create({
     userId,
