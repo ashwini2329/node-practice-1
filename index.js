@@ -11,7 +11,7 @@ const Student = require("./models/student");
 const UserSignUp = require("./models/user");
 const studentRoute = require("./routes/student");
 const employeesRoute = require("./routes/employee");
-const userRoute = require("../node-practice-1/routes/user");
+const userRoute = require("./routes/user");
 
 app.use("/users", userRoute);
 app.use("/students", studentRoute);
